@@ -11,7 +11,7 @@ import LLD.Designs.ParkingLot.Vehicle.Car;
 
 import java.util.List;
 
-public class Main {
+public class ParkingLotApplication {
     public static void main(String[] args) {
         /*Assumed scope (common interview scope):
         Vehicles: Car, Bike, Truck
