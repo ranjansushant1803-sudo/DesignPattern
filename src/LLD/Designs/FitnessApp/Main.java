@@ -1,0 +1,42 @@
+package LLD.Designs.FitnessApp;
+
+public class Main {
+    public static void main(String[] args) {
+        FitnessApp app = new FitnessApp();
+
+        // Setup
+        Location koramangala = new Location("Koramangala");
+        Location indiranagar = new Location("Indiranagar");
+
+        // Add centers
+        Centre gym1 = app.addNewCenter(1,"PowerGym Kormanangala", koramangala);
+        gym1.addActivity(ActivityName.GYM, new TimeSlot(7, 8), 3);
+
+        Centre yoga1 = app.addNewCenter(2,"Yoga Studio Indiranagar", indiranagar);
+        yoga1.addActivity(ActivityName.YOGA, new TimeSlot(6, 7), 2);
+
+        // Add users
+        Location userLoc = new Location("Koramangala");
+        User sushant = new User(1, "Sushant", userLoc);
+        app.addNewUser(sushant);
+
+        User bhaskar = new User(2, "Bhaskar", userLoc);
+        app.addNewUser(bhaskar);
+
+        // Demo 1: Find nearby gyms
+        System.out.println("🏠 Nearby Gyms:");
+        for (Centre c : app.findNearbyCenters(userLoc, ActivityName.GYM)) {
+            System.out.println("  → " + c.getName());
+        }
+
+        // Demo 2: Bookings
+        System.out.println("\n📅 Bookings:");
+        app.bookActivity("Sushant", "PowerGym Kormanangala", "GYM");  // Alice books
+        app.bookActivity("Bhaskar", "PowerGym Kormanangala", "GYM");  // Bob books
+        app.bookActivity("Bhaskar", "PowerGym Kormanangala", "GYM");  // Bob waitlist
+
+        // Demo 3: Cancel
+        System.out.println("\n❌ Cancel:");
+        app.cancelBooking("B-0");  // Alice cancels -> Bob gets promoted
+    }
+}
