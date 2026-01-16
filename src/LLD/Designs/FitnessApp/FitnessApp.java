@@ -1,6 +1,5 @@
 package LLD.Designs.FitnessApp;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
