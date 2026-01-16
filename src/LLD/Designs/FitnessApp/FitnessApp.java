@@ -2,6 +2,7 @@ package LLD.Designs.FitnessApp;
 
 import java.sql.SQLOutput;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 
 public class FitnessApp {
@@ -30,7 +31,7 @@ public class FitnessApp {
         List<Centre> nearby = new ArrayList<>();
         for(Centre centre:centres){
             ActivitySlot slot = centre.getSlot(activityName.name());
-            if(slot.hasSpace())
+            if(slot!=null && slot.hasSpace())
                 nearby.add(centre);
 
             nearby.sort((c1,c2) -> {
@@ -66,12 +67,12 @@ public class FitnessApp {
         }
 
         boolean booked = slot.book(user);
-        String status = booked ? "BOOKED":"WAITING";
+        BookingStatus status = booked ? BookingStatus.BOOKED:BookingStatus.WAITING;
         String bookingId = "B-"+bookings.size();
-        Booking booking = new Booking(bookingId,user,centre,slot);
+        Booking booking = new Booking(bookingId,user,centre,slot,status);
         bookings.add(booking);
         user.getBookings().add(booking);
-        System.out.println("User "+user.getUserName()+" booking status "+status+" : "+activityName);
+        booking.displayBookingDetails();
         return booking;
     }
 
@@ -79,9 +80,26 @@ public class FitnessApp {
         for(Booking b:bookings){
             if(b.getId().equals(bookingId)){
                 User user = b.getUser();
-                b.getActivitySlot().cancel(user);
-                b.setStatus(BookingStatus.CANCELLED);
-                return "User "+user.getUserName()+" cancelled booking for "+b.getActivitySlot().getActivityName();
+                if(b.getActivitySlot().cancel(user)) {
+                    b.setStatus(BookingStatus.CANCELLED);
+                    b.displayBookingDetails();
+                    // promote waiting list
+                    Deque<User> waitingList = b.getActivitySlot().getWaitingList();
+                    if (!waitingList.isEmpty()) {
+                        User nextUser = waitingList.pollFirst();
+                        b.getActivitySlot().book(nextUser);
+                        for (Booking bk : nextUser.getBookings()) {
+                            if (bk.getActivitySlot() == b.getActivitySlot() && bk.getStatus() == BookingStatus.WAITING) {
+                                bk.setStatus(BookingStatus.BOOKED);
+                                System.out.println("Promoted from waiting list:");
+                                bk.displayBookingDetails();
+                                break;
+                            }
+                        }
+                    }
+                    return "User "+user.getUserName()+" cancelled booking for "+b.getActivitySlot().getActivityName();
+                }
+                return "Cancellation failed";
             }
         }
         return "Booking not found";

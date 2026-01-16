@@ -39,7 +39,7 @@ public class Centre {
 
     public ActivitySlot getSlot(String name){
         for(ActivitySlot activitySlot:activities){
-            if(activitySlot.getActivityName().equals(name)){
+            if(activitySlot.getActivityName().toString().equals(name)){
                 return activitySlot;
             }
         }

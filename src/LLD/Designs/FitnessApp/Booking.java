@@ -7,11 +7,12 @@ public class Booking {
     private ActivitySlot activitySlot;
     private BookingStatus status;
 
-    public Booking(String id, User user, Centre centre, ActivitySlot activitySlot){
+    public Booking(String id, User user, Centre centre, ActivitySlot activitySlot,BookingStatus status){
         this.id = id;
         this.user = user;
         this.centre = centre;
         this.activitySlot = activitySlot;
+        this.status = status;
     }
 
     public String getId() {
@@ -36,6 +37,14 @@ public class Booking {
 
     public void setStatus(BookingStatus status) {
         this.status = status;
+    }
+
+    public void displayBookingDetails(){
+        System.out.println("Booking ID: " + id);
+        System.out.println("User: " + user.getUserName());
+        System.out.println("Centre: " + centre.getName());
+        System.out.println("Activity: " + activitySlot.getActivityName());
+        System.out.println("Status: " + status);
     }
 
 }

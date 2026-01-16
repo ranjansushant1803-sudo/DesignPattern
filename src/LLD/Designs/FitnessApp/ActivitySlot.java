@@ -1,6 +1,7 @@
 package LLD.Designs.FitnessApp;
 
 import java.util.Deque;
+import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ActivitySlot {
@@ -26,7 +27,7 @@ public class ActivitySlot {
         return bookedCount;
     }
 
-    public Deque<User> getWaitList() {
+    public Deque<User> getWaitingList() {
         return waitList;
     }
 
@@ -34,6 +35,8 @@ public class ActivitySlot {
         this.activityName = activityName;
         this.timeSlot = timeSlot;
         this.capacity = capacity;
+        this.bookedCount = new AtomicInteger(0);
+        this.waitList = new LinkedList<>();
     }
 
     public boolean hasSpace(){
@@ -49,13 +52,12 @@ public class ActivitySlot {
         return false;
     }
 
-    public void cancel(User user){
+    public boolean cancel(User user){
         if(bookedCount.decrementAndGet()>=0)
         {
-            User nextUser = waitList.pollFirst();
-            if(nextUser!=null)
-                bookedCount.incrementAndGet();
+            return true;
         }
+        return false;
     }
 
 }
