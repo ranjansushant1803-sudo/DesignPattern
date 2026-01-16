@@ -34,12 +34,12 @@ public class Main {
 
         // Demo 2: Bookings
         System.out.println("\n📅 Bookings:");
-        Booking sushantBooking = app.bookActivity("Sushant", "PowerGym Kormanangala", "GYM");  // Alice books
-        Booking bhaskarBooking = app.bookActivity("Bhaskar", "PowerGym Kormanangala", "GYM");  // Bob books
-        Booking anuragBooking = app.bookActivity("Anurag", "PowerGym Kormanangala", "GYM");  // Bob waitlist
+        Booking sushantBooking = app.bookActivity("Sushant", "PowerGym Kormanangala", "GYM");  // Sushant books
+        Booking bhaskarBooking = app.bookActivity("Bhaskar", "PowerGym Kormanangala", "GYM");  // Bhaskar books
+        Booking anuragBooking = app.bookActivity("Anurag", "PowerGym Kormanangala", "GYM");  // Anurag waitlist
 
         // Demo 3: Cancel
         System.out.println("\n❌ Cancel:");
-        app.cancelBooking("B-0");// Alice cancels -> Bob gets promoted
+        app.cancelBooking("B-0");// Sushant cancels -> Anurag gets promoted
     }
 }

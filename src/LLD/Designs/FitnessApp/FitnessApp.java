@@ -72,16 +72,20 @@ public class FitnessApp {
         Booking booking = new Booking(bookingId,user,centre,slot,status);
         bookings.add(booking);
         user.getBookings().add(booking);
+        System.out.println(
+                booked ? "Booking Confirmed":"Added to Waiting List"
+        );
         booking.displayBookingDetails();
         return booking;
     }
 
-    public String cancelBooking(String bookingId){
+    public void cancelBooking(String bookingId){
         for(Booking b:bookings){
             if(b.getId().equals(bookingId)){
                 User user = b.getUser();
                 if(b.getActivitySlot().cancel(user)) {
                     b.setStatus(BookingStatus.CANCELLED);
+                    System.out.println("Booking Cancelled:");
                     b.displayBookingDetails();
                     // promote waiting list
                     Deque<User> waitingList = b.getActivitySlot().getWaitingList();
@@ -91,18 +95,19 @@ public class FitnessApp {
                         for (Booking bk : nextUser.getBookings()) {
                             if (bk.getActivitySlot() == b.getActivitySlot() && bk.getStatus() == BookingStatus.WAITING) {
                                 bk.setStatus(BookingStatus.BOOKED);
-                                System.out.println("Promoted from waiting list:");
+                                System.out.println("Congrats. Promoted from waiting list:");
                                 bk.displayBookingDetails();
                                 break;
                             }
                         }
                     }
-                    return "User "+user.getUserName()+" cancelled booking for "+b.getActivitySlot().getActivityName();
+                    return;
                 }
-                return "Cancellation failed";
+                System.out.println("Cancellation failed");
+                return;
             }
         }
-        return "Booking not found";
+        System.out.println("Booking not found");
     }
 
     public User findUsers(String userName){
