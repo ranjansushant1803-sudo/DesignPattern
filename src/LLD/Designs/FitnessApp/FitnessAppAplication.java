@@ -1,6 +1,6 @@
 package LLD.Designs.FitnessApp;
 
-public class Main {
+public class FitnessAppAplication {
     public static void main(String[] args) {
         FitnessApp app = new FitnessApp();
 
