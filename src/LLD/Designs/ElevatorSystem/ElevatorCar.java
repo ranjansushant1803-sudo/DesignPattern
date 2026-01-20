@@ -32,6 +32,10 @@ public class ElevatorCar {
         return nextStopFloor;
     }
 
+    public void setDirection(ElevatorDirection direction) {
+        this.direction = direction;
+    }
+
     public void moveToFloor(int targetFloor) {
         this.nextStopFloor = targetFloor;
         int startFloor = currentFloor;
@@ -66,6 +70,6 @@ public class ElevatorCar {
     }
 
     public void displayStatus() {
-        System.out.println("Elevator ID: " + id+ " Current Floor: " + (currentFloor+1) + " going : " + direction);
+        System.out.println("Elevator ID: " + id+ " Current Floor: " + currentFloor + " going : " + direction);
     }
 }

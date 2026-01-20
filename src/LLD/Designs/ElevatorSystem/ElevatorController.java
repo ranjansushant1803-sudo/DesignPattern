@@ -26,6 +26,10 @@ public class ElevatorController implements Runnable {
             if (!downDestinationQueue.contains(targetFloor))
                 downDestinationQueue.offer(targetFloor);
         }
+        synchronized (monitor) {
+            monitor.notify();   // wake elevator thread
+        }
+        //printQueueSnapshots();
     }
 
     public ElevatorCar getElevatorCar() {
@@ -46,6 +50,20 @@ public class ElevatorController implements Runnable {
     }
 
     public void controlElevator() {
+
+        synchronized (monitor) {
+            while (upDestinationQueue.isEmpty() && downDestinationQueue.isEmpty()) {
+                try {
+                    System.out.println("elevator:" + elevatorCar.getId() + " is IDLE");
+                    elevatorCar.setDirection(ElevatorDirection.IDLE);
+                    monitor.wait(); // sleep until request arrives
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }
+
+
         while (true) {
             while (!upDestinationQueue.isEmpty()) {
                 int nextFloor = (int) upDestinationQueue.poll();
@@ -65,4 +83,21 @@ public class ElevatorController implements Runnable {
             }
         }
     }
+
+    private String snapshotQueue(PriorityBlockingQueue<Integer> q) {
+        Integer[] arr = q.toArray(new Integer[0]);
+        Comparator<? super Integer> cmp = q.comparator();
+        if (cmp == null) {
+            Arrays.sort(arr); // natural order
+        } else {
+            Arrays.sort(arr, cmp); // queue's comparator order
+        }
+        return Arrays.toString(arr);
+    }
+
+    public void printQueueSnapshots() {
+        System.out.println("Up queue snapshot: " + snapshotQueue(upDestinationQueue));
+        System.out.println("Down queue snapshot: " + snapshotQueue(downDestinationQueue));
+    }
+
 }
